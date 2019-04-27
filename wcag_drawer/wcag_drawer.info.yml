@@ -1,0 +1,7 @@
+name: WCAG Drawer
+type: module
+description: 'Provides framework for easy accessible drawers.'
+# core: 8.x
+package: custom
+version: VERSION
+core: '8.x'

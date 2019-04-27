@@ -1,0 +1,42 @@
+.wcag-drawer {
+  display: none;
+}
+
+button.wcag-drawer-handle {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+}
+
+.wcag-drawer-handle.chevron:after {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-left: 0.6em;
+  border-width: 0 0 0.1em 0.1em;
+  border-style: solid;
+  border-color: inherit;
+  transform-origin: 50% 50%;
+  -ms-transform: translateY(-20%) rotate(-45deg);
+  -webkit-transform: translateY(-20%) rotate(-45deg);
+  transform: translateY(-20%) rotate(-45deg);
+}
+
+.wcag-drawer-handle.open.chevron:after {
+  -ms-transform: translateY(20%) rotate(135deg);
+  -webkit-transform: translateY(20%) rotate(135deg);
+  transform: translateY(20%) rotate(135deg);
+}
+
+@media (min-width: 768px) {
+  .wcag-drawer.desktop-open {
+    display: block !important;
+    height: unset !important;
+  }
+  .wcag-drawer-handle.desktop-open.chevron:after {
+    content: none;
+  }
+}

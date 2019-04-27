@@ -1,0 +1,11 @@
+wcag-drawer:
+  css:
+    theme:
+      css/wcag-drawer.css: {}
+  js:
+    js/wcag-drawer.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
