@@ -1,8 +1,9 @@
-.wcag-drawer {
+.wcag-drawer:not(.load-open) {
   display: none;
 }
 
-button.wcag-drawer-handle {
+button.wcag-drawer-handle,
+button.wcag-drawer-closer {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

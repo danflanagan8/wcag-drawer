@@ -13,9 +13,7 @@ Every drawer handle must have...
 
 Every drawer must have...
 1. id="my-drawer-id" //this must correspond to the aria-controls attribute of the handle
-
-You can also add the class "wcag-drawer" to the drawer to avoid an unsightly flash,
-but it's not required.
+2. class="wcag-drawer"
 
 It is recommended that your drawer handle be a button, but it could be a link
 with role="button". After all, we're trying to be accessible. There are styles
@@ -23,31 +21,40 @@ in the library that remove most default button styles from a button given the
 wcag-drawer-handle class.
 
 BONUS CLASSES:
-There are some bonus classes that do things.
+There are some bonus classes that do things. They are optional.
 
 chevron      : Add this class to the handle to give it a chevron
 desktop-open : Add this to a wcag-drawer so force it open on desktop. It only
                really acts like a drawer on mobile. Put this on the handle too
                to hide the chevron.
+load-open    : Add this to a wcag-drawer to have the drawer load open. It can
+               still open and close like normal, which is different from the
+               desktop-open class which only acts like a drawer on mobile.
 
 BONUS ATTRIBUTES:
+These are optional.
 
-data-wcag-focus : Set to true if the drawer contains a form and you want to auto
-                  focus to the first form element.
+data-wcag-focus : Set to true on drawer if the drawer contains a form and you want to auto
+                  focus to the first form element. Make sure it's actually a string
+                  value of "true".
+
+data-slide-time : This number gets passed to jquery slide() functions. The
+                  default is 400. It's a time in ms. If you want the drawer to
+                  open/close instantly add data-slide-time="0".
 
 
 EXAMPLES:
 
 <button class='wcag-drawer-handle chevron' aria-controls="my-drawer">Open!</button>
-<div id="my-drawer" class='wcag-drawer'>
+<div id="my-drawer" class='wcag-drawer' data-slide-time="0"> <!-- instant open/close -->
  <!-- STUFF IN DRAWER -->
 </div>
 
 or maybe...
 
 <a role='button' class='wcag-drawer-handle desktop-open' aria-controls="my-drawer">Open!</button>
-<div id="my-drawer " class='wcag-drawer desktop-open'>
- <!-- STUFF IN DRAWER -->
+<div id="my-drawer" class='wcag-drawer desktop-open' data-wcag-focus="true">
+ <!-- FORM IN DRAWER -->
 </div>
 
 PRO-TIPS

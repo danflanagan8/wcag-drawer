@@ -1,30 +1,68 @@
 (function ($, Drupal, drupalSettings) {
 
   //A class to make accessible drawers
-  Drupal.WcagDrawer = function($handle){
+  Drupal.WcagDrawer = function($drawer){
     var WcagDrawer = this;
-    this.$handle = $handle;
-    this.$drawer = $('#' + $handle.attr('aria-controls'));
+
+    this.init = function($drawer) {
+      WcagDrawer.$drawer = $drawer;
+      var slideTime = $drawer.data('slideTime');
+      if (Number(slideTime) === 0) {
+        WcagDrawer.slideTime = 0;
+      }
+      else {
+        WcagDrawer.slideTime = $drawer.data('slideTime') ? Number($drawer.data('slideTime')) : 400;
+      }
+      WcagDrawer.initHandles();
+      WcagDrawer.initClosers();
+
+      if ($drawer.hasClass('load-open')) {
+        this.open();
+      }
+      else {
+        this.close();
+      }
+
+    }
+
+    this.initHandles = function(){
+      var id = WcagDrawer.$drawer.attr('id');
+      var $handles = $('.wcag-drawer-handle[aria-controls="' + id + '"]');
+      $handles.off("click").click(function(){
+        WcagDrawer.toggle();
+      });
+      WcagDrawer.$handles = $handles;
+    }
+
+    this.initClosers = function(){
+      var id = WcagDrawer.$drawer.attr('id');
+      var $closers = WcagDrawer.$drawer.find('.wcag-drawer-closer');
+      $closers.off("click").click(function(){
+        WcagDrawer.close();
+      });
+      $closers.attr('aria-controls', id).attr('aria-label', "Close drawer");
+      WcagDrawer.$closers = $closers;
+    }
 
     this.open = function(){
-      this.$handle.attr('aria-expanded', 'true');
-      this.$handle.addClass('open');
-      this.$drawer.addClass('open');
-      this.$drawer.attr('aria-hidden', 'false');
-      this.$drawer.slideDown(function(){
-        if (WcagDrawer.$handle.data('wcag-focus')) {
+      WcagDrawer.$handles.attr('aria-expanded', 'true');
+      WcagDrawer.$handles.addClass('open');
+      WcagDrawer.$drawer.addClass('open');
+      WcagDrawer.$drawer.attr('aria-hidden', 'false');
+      WcagDrawer.$drawer.slideDown(WcagDrawer.slideTime, function(){
+        if (WcagDrawer.$drawer.data('wcag-focus')) {
           WcagDrawer.$drawer.find('input, select, textarea').first().focus();
         }
       });
-      this.isOpen = true;
+      WcagDrawer.isOpen = true;
     }
 
-    this.close = function(){
-      this.$handle.attr('aria-expanded', 'false');
-      this.$handle.removeClass('open');
+    this.close = function($handle){
+      this.$handles.attr('aria-expanded', 'false');
+      this.$handles.removeClass('open');
       this.$drawer.removeClass('open');
       this.$drawer.attr('aria-hidden', 'true');
-      this.$drawer.slideUp();
+      this.$drawer.slideUp(WcagDrawer.slideTime);
       this.isOpen = false;
     }
 
@@ -32,30 +70,27 @@
       this.isOpen ? this.close() : this.open();
     }
 
-    this.$drawer.addClass('wcag-drawer');
-    //drawer starts closed always.
-    this.close();
+    this.init($drawer);
+
   }
 
   Drupal.behaviors.wcagDrawer = {
 
     attach: function(context, settings) {
-
-      //init the drawer handle
-      $('.wcag-drawer-handle').once('init-wcag-drawer').each(function(){
+      console.log('wcag');
+      // Init drawers
+      $('.wcag-drawer').once('init-wcag-drawer').each(function(){
         var WcagDrawer = new Drupal.WcagDrawer($(this));
         $(this).data("WcagDrawer", WcagDrawer);
-        $(this).click(function(){
-          $(this).data("WcagDrawer").toggle();
-        });
       });
 
-      //a drawer might load after the handle. Try to connect a drawer to its handle
-      $('.wcag-drawer').once('find-wcag-drawer-handle').each(function(){
+      // Handle might load after the drawer. Try to connect a drawer to its
+      // Closers live inside the drawer, so there's no extra script for them.
+      $('.wcag-drawer-handle').once('find-wcag-drawer').each(function(){
         var id = $(this).attr('id');
-        var $handle = $('.wcag-drawer-handle[aria-controls="' + id + '"]');
-        if($handle.length){
-          $handle.data('WcagDrawer').$drawer = $(this);
+        var $drawer = $('#' + id);
+        if ($(this).data("WcagDrawer")) {
+          $(this).data("WcagDrawer").initHandles();
         }
       });
 
